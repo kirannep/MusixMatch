@@ -6,15 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.example.musixmatch.R
 import com.example.musixmatch.dependency_injection.application.MyApplication
 import com.example.musixmatch.dependency_injection.component.DaggerAppComponent
 import com.example.musixmatch.dependency_injection.network_module.NetworkModule
+import com.example.musixmatch.model.Artist
 import com.example.musixmatch.model.BaseModel
 import com.example.musixmatch.network.GetArtistRequest
+import kotlinx.android.synthetic.main.fragment_artist.*
 import javax.inject.Inject
 
 class ArtistFragment : Fragment() {
@@ -43,7 +47,30 @@ class ArtistFragment : Fragment() {
             Observer<BaseModel> {
                     t ->
                 Log.i("resultFromRetrofit", ""+t.message.body.artist_list[0].artist.artist_name)
-                //cakeAdapterData(t)
+                Log.i("ratingFromRetrofit", ""+t.message.body.artist_list[0].artist.artist_rating)
+
+                artistAdapterData(t)
             })
+
+
+        viewModel.getArtistFromDB()
+        val artistCakeInfoFromDB:MutableLiveData<List<Artist>>? = viewModel.artistFromDB()
+        artistCakeInfoFromDB?.observe(this,object:Observer<List<Artist>>{
+            override fun onChanged(t: List<Artist>?) {
+                    Log.d("artistfromdb", t!![0].artist_country)
+                Log.d("artistfromdb", t!![1].artist_country)
+                Log.d("artistfromdb", t!![2].artist_country)
+
+
+
+            }
+
+        })
+    }
+
+    private fun artistAdapterData(t:BaseModel){
+        val adapter = ArtistAdapter(t)
+        recyclerview_artist.layoutManager = LinearLayoutManager(context)
+        recyclerview_artist.adapter = adapter
     }
 }

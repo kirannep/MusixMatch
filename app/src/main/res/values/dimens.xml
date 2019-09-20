@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="tv_name_layout_width">136dp</dimen>
+    <dimen name="tv_name_layout_height">32dp</dimen>
+    <dimen name="tv_comment_layout_width">348dp</dimen>
+    <dimen name="tv_comment_layout_height">60dp</dimen>
+    <dimen name="tv_country_layout_width">95dp</dimen>
+    <dimen name="tv_country_layout_height">28dp</dimen>
+</resources>

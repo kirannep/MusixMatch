@@ -10,16 +10,19 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.musixmatch.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+@Entity(tableName = "artistsearch")
 data class Artist (
 
-	@SerializedName("artist_id") val artist_id : Int,
+	@PrimaryKey @SerializedName("artist_id") val artist_id : Int,
 	@SerializedName("artist_name") val artist_name : String,
 //	@SerializedName("artist_name_translation_list") val artist_name_translation_list : Int,
 	@SerializedName("artist_comment") val artist_comment : String,
 	@SerializedName("artist_country") val artist_country : String,
-	@SerializedName("artist_alias_list") val artist_alias_list : List<Artist_alias_list>,
+//	@SerializedName("artist_alias_list") val artist_alias_list : List<Artist_alias_list>,
 	@SerializedName("artist_rating") val artist_rating : Int,
 	@SerializedName("artist_twitter_url") val artist_twitter_url : String,
 //	@SerializedName("artist_credits") val artist_credits : Artist_credits,

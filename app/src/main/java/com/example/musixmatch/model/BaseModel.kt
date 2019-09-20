@@ -11,9 +11,10 @@ For support, please feel free to contact me at https://www.linkedin.com/in/syeda
 
 package com.example.musixmatch.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 data class BaseModel (
-
 	@SerializedName("message") val message : Message
 )

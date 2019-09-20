@@ -6,6 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.musixmatch.common.Constants
+import com.example.musixmatch.database.ArtistDatabase
+import com.example.musixmatch.database.ArtistSearchAccess
+import com.example.musixmatch.model.Artist
 import com.example.musixmatch.model.BaseModel
 import com.example.musixmatch.network.GetArtistRequest
 import io.reactivex.Observable
@@ -20,7 +23,14 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
     val artistObserver=ArtistObserver()
     val compositeDisposable = CompositeDisposable()
     private val artist: MutableLiveData<BaseModel>? = MutableLiveData()
+    val artistDBrequest = ArtistDatabase.getInstance(application).artistDAO()
+    var showSuccess: MutableLiveData<Boolean> = MutableLiveData()
+    val getArtistRequest:Observable<List<Artist>> = artistDBrequest.getArtist()
+    val artistRoomObserver = ArtistRoomObserver()
+    private val artistdb:MutableLiveData<List<Artist>>? = MutableLiveData()
 
+
+    //retrofit
     fun getArtistFromRetrofit(){
         val call: Observable<BaseModel> = clientInterface.getartist(Constants.API_KEY)
         call
@@ -41,6 +51,7 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
 
             override fun onNext(t: BaseModel) {
                 artist?.value = t
+                    insertArtistinDB(t.message.body.artist_list[1].artist)
             }
 
             override fun onError(e: Throwable) {
@@ -51,6 +62,48 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
 
     fun artistRetrofit():MutableLiveData<BaseModel>?{
         return artist
+    }
+
+    //database
+    fun insertArtistinDB(t:Artist){
+            artistDBrequest.insertArtist(t)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({showSuccess.value = true},{
+                    Log.i("ViewModel error",it.message)
+                    showSuccess.value=false})
+    }
+
+    //get data from database
+    fun getArtistFromDB(){
+        getArtistRequest
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(artistRoomObserver)
+    }
+
+    private fun ArtistRoomObserver():Observer<List<Artist>>{
+        return object: Observer<List<Artist>>{
+            override fun onComplete() {
+                Log.d("emittedFromDB","all items emitted")
+            }
+
+            override fun onSubscribe(d: Disposable) {
+                compositeDisposable.add(d)
+            }
+
+            override fun onNext(t: List<Artist>) {
+                artistdb?.value = t
+            }
+
+            override fun onError(e: Throwable) {
+                Log.d("errorFromDB",e.message)
+            }
+        }
+    }
+
+    fun artistFromDB():MutableLiveData<List<Artist>>?{
+        return artistdb
     }
 
 }
