@@ -27,7 +27,7 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
         return artistRepository.artistRetrofit()
     }
 
-    fun DBArtist():MutableLiveData<List<Artist>>?{
+    fun DBArtist():MutableLiveData<Artist>?{
         artistRepository.getArtistFromDB()
         return artistRepository.artistFromDB()
     }

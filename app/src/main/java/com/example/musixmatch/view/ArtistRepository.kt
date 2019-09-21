@@ -21,10 +21,10 @@ class ArtistRepository (val clientInterface: GetArtistRequest, application: Appl
     val artistRoomObserver = ArtistRoomObserver()
     val DBrequest = ArtistDatabase.getInstance(application).artistDAO()
     var showSuccess: MutableLiveData<Boolean> = MutableLiveData()
-    val getArtistRequest: Observable<List<Artist>> = DBrequest.getArtist()
+    val getArtistRequest: Observable<Artist> = DBrequest.getArtist()
     val compositeDisposable = CompositeDisposable()
 
-    private val artistdb:MutableLiveData<List<Artist>>? = MutableLiveData()
+    private val artistdb:MutableLiveData<Artist>? = MutableLiveData()
 
 
 
@@ -80,8 +80,8 @@ class ArtistRepository (val clientInterface: GetArtistRequest, application: Appl
             .subscribe(artistRoomObserver)
     }
 
-    private fun ArtistRoomObserver(): Observer<List<Artist>> {
-        return object: Observer<List<Artist>> {
+    private fun ArtistRoomObserver(): Observer<Artist> {
+        return object: Observer<Artist> {
             override fun onComplete() {
                 Log.d("emittedFromDB","all items emitted")
             }
@@ -90,7 +90,7 @@ class ArtistRepository (val clientInterface: GetArtistRequest, application: Appl
                 compositeDisposable.add(d)
             }
 
-            override fun onNext(t: List<Artist>) {
+            override fun onNext(t:Artist ) {
                 artistdb?.value = t
             }
 
@@ -100,7 +100,7 @@ class ArtistRepository (val clientInterface: GetArtistRequest, application: Appl
         }
     }
 
-    fun artistFromDB():MutableLiveData<List<Artist>>?{
+    fun artistFromDB():MutableLiveData<Artist>?{
         return artistdb
     }
 }
