@@ -20,90 +20,102 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class ArtistViewModel @Inject constructor(application: Application, val clientInterface: GetArtistRequest):ViewModel() {
-    val artistObserver=ArtistObserver()
-    val compositeDisposable = CompositeDisposable()
-    private val artist: MutableLiveData<BaseModel>? = MutableLiveData()
-    val artistDBrequest = ArtistDatabase.getInstance(application).artistDAO()
-    var showSuccess: MutableLiveData<Boolean> = MutableLiveData()
-    val getArtistRequest:Observable<List<Artist>> = artistDBrequest.getArtist()
-    val artistRoomObserver = ArtistRoomObserver()
-    private val artistdb:MutableLiveData<List<Artist>>? = MutableLiveData()
+    val artistRepository:ArtistRepository = ArtistRepository(clientInterface,application)
 
-
-    //retrofit
-    fun getArtistFromRetrofit(){
-        val call: Observable<BaseModel> = clientInterface.getartist(Constants.API_KEY)
-        call
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(artistObserver)
+    fun RetrofitArtist():MutableLiveData<BaseModel>?{
+        artistRepository.getArtistFromRetrofit()
+        return artistRepository.artistRetrofit()
     }
 
-    private fun ArtistObserver():Observer<BaseModel>{
-        return object: Observer<BaseModel>{
-            override fun onComplete() {
-                Log.d("emitted","all items emitted")
-            }
-
-            override fun onSubscribe(d: Disposable) {
-                compositeDisposable.add(d)
-            }
-
-            override fun onNext(t: BaseModel) {
-                artist?.value = t
-                    insertArtistinDB(t.message.body.artist_list[1].artist)
-            }
-
-            override fun onError(e: Throwable) {
-                Log.d("errormsgRetrofit",e.message)
-            }
-        }
+    fun DBArtist():MutableLiveData<List<Artist>>?{
+        artistRepository.getArtistFromDB()
+        return artistRepository.artistFromDB()
     }
 
-    fun artistRetrofit():MutableLiveData<BaseModel>?{
-        return artist
-    }
-
-    //database
-    fun insertArtistinDB(t:Artist){
-            artistDBrequest.insertArtist(t)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({showSuccess.value = true},{
-                    Log.i("ViewModel error",it.message)
-                    showSuccess.value=false})
-    }
-
-    //get data from database
-    fun getArtistFromDB(){
-        getArtistRequest
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(artistRoomObserver)
-    }
-
-    private fun ArtistRoomObserver():Observer<List<Artist>>{
-        return object: Observer<List<Artist>>{
-            override fun onComplete() {
-                Log.d("emittedFromDB","all items emitted")
-            }
-
-            override fun onSubscribe(d: Disposable) {
-                compositeDisposable.add(d)
-            }
-
-            override fun onNext(t: List<Artist>) {
-                artistdb?.value = t
-            }
-
-            override fun onError(e: Throwable) {
-                Log.d("errorFromDB",e.message)
-            }
-        }
-    }
-
-    fun artistFromDB():MutableLiveData<List<Artist>>?{
-        return artistdb
-    }
+//    val artistObserver=ArtistObserver()
+//    val compositeDisposable = CompositeDisposable()
+//    private val artist: MutableLiveData<BaseModel>? = MutableLiveData()
+//    val artistDBrequest = ArtistDatabase.getInstance(application).artistDAO()
+//    var showSuccess: MutableLiveData<Boolean> = MutableLiveData()
+//    val getArtistRequest:Observable<List<Artist>> = artistDBrequest.getArtist()
+//    val artistRoomObserver = ArtistRoomObserver()
+//    private val artistdb:MutableLiveData<List<Artist>>? = MutableLiveData()
+//
+//
+//    //retrofit
+//    fun getArtistFromRetrofit(){
+//        val call: Observable<BaseModel> = clientInterface.getartist(Constants.API_KEY)
+//        call
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe(artistObserver)
+//    }
+//
+//    private fun ArtistObserver():Observer<BaseModel>{
+//        return object: Observer<BaseModel>{
+//            override fun onComplete() {
+//                Log.d("emitted","all items emitted")
+//            }
+//
+//            override fun onSubscribe(d: Disposable) {
+//                compositeDisposable.add(d)
+//            }
+//
+//            override fun onNext(t: BaseModel) {
+//                artist?.value = t
+//                    insertArtistinDB(t.message.body.artist_list[1].artist)
+//            }
+//
+//            override fun onError(e: Throwable) {
+//                Log.d("errormsgRetrofit",e.message)
+//            }
+//        }
+//    }
+//
+//    fun artistRetrofit():MutableLiveData<BaseModel>?{
+//        return artist
+//    }
+//
+//    //database
+//    fun insertArtistinDB(t:Artist){
+//            artistDBrequest.insertArtist(t)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({showSuccess.value = true},{
+//                    Log.i("ViewModel error",it.message)
+//                    showSuccess.value=false})
+//    }
+//
+//    //get data from database
+//    fun getArtistFromDB(){
+//        getArtistRequest
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe(artistRoomObserver)
+//    }
+//
+//    private fun ArtistRoomObserver():Observer<List<Artist>>{
+//        return object: Observer<List<Artist>>{
+//            override fun onComplete() {
+//                Log.d("emittedFromDB","all items emitted")
+//            }
+//
+//            override fun onSubscribe(d: Disposable) {
+//                compositeDisposable.add(d)
+//            }
+//
+//            override fun onNext(t: List<Artist>) {
+//                artistdb?.value = t
+//            }
+//
+//            override fun onError(e: Throwable) {
+//                Log.d("errorFromDB",e.message)
+//            }
+//        }
+//    }
+//
+//    fun artistFromDB():MutableLiveData<List<Artist>>?{
+//        return artistdb
+//    }
 
 }
