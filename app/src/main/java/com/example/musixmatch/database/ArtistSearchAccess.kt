@@ -4,8 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.musixmatch.model.Artist
-import com.example.musixmatch.model.BaseModel
+import com.example.musixmatch.model.artist.Artist
 import io.reactivex.Completable
 import io.reactivex.Observable
 
@@ -15,5 +14,5 @@ interface ArtistSearchAccess {
     fun getArtist():Observable<List<Artist>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertArtist(insertArtist:Artist):Completable
+    fun insertArtist(insertArtist: Artist):Completable
 }

@@ -3,7 +3,7 @@ package com.example.musixmatch.dependency_injection.network_module
 import android.app.Application
 import com.example.musixmatch.common.Constants
 import com.example.musixmatch.network.GetArtistRequest
-import com.example.musixmatch.view.FragmentArtistModelFactory
+import com.example.musixmatch.view.artist.FragmentArtistModelFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -52,6 +52,6 @@ class NetworkModule(private val application: Application) {
     @Provides
     @Singleton
     fun provideCakeViewModelFactory(clientInterface:GetArtistRequest,application: Application): FragmentArtistModelFactory {
-        return FragmentArtistModelFactory(clientInterface,application)
+        return FragmentArtistModelFactory(clientInterface, application)
     }
 }

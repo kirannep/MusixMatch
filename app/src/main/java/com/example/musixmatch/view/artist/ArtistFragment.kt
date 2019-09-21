@@ -1,4 +1,4 @@
-package com.example.musixmatch.view
+package com.example.musixmatch.view.artist
 
 import android.os.Bundle
 import android.util.Log
@@ -12,12 +12,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.example.musixmatch.R
-import com.example.musixmatch.dependency_injection.application.MyApplication
 import com.example.musixmatch.dependency_injection.component.DaggerAppComponent
 import com.example.musixmatch.dependency_injection.network_module.NetworkModule
-import com.example.musixmatch.model.Artist
-import com.example.musixmatch.model.BaseModel
-import com.example.musixmatch.network.GetArtistRequest
+import com.example.musixmatch.model.artist.Artist
+import com.example.musixmatch.model.artist.BaseModel
 import kotlinx.android.synthetic.main.fragment_artist.*
 import javax.inject.Inject
 
@@ -48,7 +46,6 @@ class ArtistFragment : Fragment() {
                     t ->
                 Log.i("resultFromRetrofit", ""+t.message.body.artist_list[0].artist.artist_name)
                 Log.i("ratingFromRetrofit", ""+t.message.body.artist_list[0].artist.artist_rating)
-
                 artistAdapterData(t)
             })
 
@@ -64,8 +61,14 @@ class ArtistFragment : Fragment() {
         })
     }
 
-    private fun artistAdapterData(t:BaseModel){
-        val adapter = ArtistAdapter(t)
+    private fun artistAdapterData(t: BaseModel){
+        val adapter = ArtistAdapter(t,
+            object : onClickArtistListener {
+                override fun onClickedArtist(artist: Artist) {
+
+                }
+
+            })
         recyclerview_artist.layoutManager = LinearLayoutManager(context)
         recyclerview_artist.adapter = adapter
     }

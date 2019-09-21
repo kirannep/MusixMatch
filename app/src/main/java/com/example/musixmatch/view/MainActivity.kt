@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.musixmatch.R
+import com.example.musixmatch.view.artist.ArtistFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private fun addFragment(){
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.fragmentContainer,ArtistFragment())
+        fragmentTransaction.add(R.id.fragmentContainer, ArtistFragment())
             .addToBackStack(null)
             .commit()
     }

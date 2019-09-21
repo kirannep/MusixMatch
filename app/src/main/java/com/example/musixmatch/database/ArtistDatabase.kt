@@ -4,8 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.musixmatch.model.Artist
-import com.example.musixmatch.model.BaseModel
+import com.example.musixmatch.model.artist.Artist
 
 @Database(entities = arrayOf(Artist::class), version = 1)
 abstract class ArtistDatabase: RoomDatabase() {

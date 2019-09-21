@@ -1,4 +1,4 @@
-package com.example.musixmatch.view
+package com.example.musixmatch.view.artist
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
@@ -7,7 +7,7 @@ import com.example.musixmatch.network.GetArtistRequest
 
 class FragmentArtistModelFactory(private val clientInterface:GetArtistRequest, private val application:Application):ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return ArtistViewModel(application,clientInterface) as T
+        return ArtistViewModel(application, clientInterface) as T
     }
 
 }

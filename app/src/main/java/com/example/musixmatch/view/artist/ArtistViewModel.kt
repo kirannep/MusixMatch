@@ -1,15 +1,13 @@
-package com.example.musixmatch.view
+package com.example.musixmatch.view.artist
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.musixmatch.common.Constants
 import com.example.musixmatch.database.ArtistDatabase
-import com.example.musixmatch.database.ArtistSearchAccess
-import com.example.musixmatch.model.Artist
-import com.example.musixmatch.model.BaseModel
+import com.example.musixmatch.model.artist.Artist
+import com.example.musixmatch.model.artist.BaseModel
 import com.example.musixmatch.network.GetArtistRequest
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -65,7 +63,7 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
     }
 
     //database
-    fun insertArtistinDB(t:Artist){
+    fun insertArtistinDB(t: Artist){
             artistDBrequest.insertArtist(t)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
