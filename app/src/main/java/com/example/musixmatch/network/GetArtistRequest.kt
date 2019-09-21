@@ -1,5 +1,6 @@
 package com.example.musixmatch.network
 
+import com.example.musixmatch.model.Artist
 import com.example.musixmatch.model.BaseModel
 import io.reactivex.Observable
 import retrofit2.http.GET

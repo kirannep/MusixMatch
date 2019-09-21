@@ -21,10 +21,10 @@ class ArtistRepository (val clientInterface: GetArtistRequest, application: Appl
     val artistRoomObserver = ArtistRoomObserver()
     val DBrequest = ArtistDatabase.getInstance(application).artistDAO()
     var showSuccess: MutableLiveData<Boolean> = MutableLiveData()
-    val getArtistRequest: Observable<Artist> = DBrequest.getArtist()
+    val getArtistRequest: Observable<List<Artist>> = DBrequest.getArtist()
     val compositeDisposable = CompositeDisposable()
 
-    private val artistdb:MutableLiveData<Artist>? = MutableLiveData()
+    private val artistdb:MutableLiveData<List<Artist>>? = MutableLiveData()
 
 
 
@@ -49,7 +49,7 @@ class ArtistRepository (val clientInterface: GetArtistRequest, application: Appl
 
             override fun onNext(t: BaseModel) {
                 artist?.value = t
-                insertArtistinDB(t.message.body.artist_list[1].artist)
+                insertArtistinDB(t.message.body.artist_list[].artist)
             }
 
             override fun onError(e: Throwable) {
@@ -63,7 +63,7 @@ class ArtistRepository (val clientInterface: GetArtistRequest, application: Appl
     }
 
     //database
-    fun insertArtistinDB(t:Artist){
+    fun insertArtistinDB(t:List<Artist>){
         DBrequest.insertArtist(t)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -80,8 +80,8 @@ class ArtistRepository (val clientInterface: GetArtistRequest, application: Appl
             .subscribe(artistRoomObserver)
     }
 
-    private fun ArtistRoomObserver(): Observer<Artist> {
-        return object: Observer<Artist> {
+    private fun ArtistRoomObserver(): Observer<List<Artist>> {
+        return object: Observer<List<Artist>> {
             override fun onComplete() {
                 Log.d("emittedFromDB","all items emitted")
             }
@@ -90,7 +90,7 @@ class ArtistRepository (val clientInterface: GetArtistRequest, application: Appl
                 compositeDisposable.add(d)
             }
 
-            override fun onNext(t:Artist ) {
+            override fun onNext(t:List<Artist> ) {
                 artistdb?.value = t
             }
 
@@ -100,7 +100,7 @@ class ArtistRepository (val clientInterface: GetArtistRequest, application: Appl
         }
     }
 
-    fun artistFromDB():MutableLiveData<Artist>?{
+    fun artistFromDB():MutableLiveData<List<Artist>>?{
         return artistdb
     }
 }

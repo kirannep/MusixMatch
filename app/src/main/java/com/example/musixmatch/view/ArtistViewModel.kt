@@ -22,12 +22,12 @@ import javax.inject.Inject
 class ArtistViewModel @Inject constructor(application: Application, val clientInterface: GetArtistRequest):ViewModel() {
     val artistRepository:ArtistRepository = ArtistRepository(clientInterface,application)
 
-    fun RetrofitArtist():MutableLiveData<BaseModel>?{
+    fun RetrofitArtist():MutableLiveData<List<Artist>>?{
         artistRepository.getArtistFromRetrofit()
         return artistRepository.artistRetrofit()
     }
 
-    fun DBArtist():MutableLiveData<Artist>?{
+    fun DBArtist():MutableLiveData<List<Artist>>?{
         artistRepository.getArtistFromDB()
         return artistRepository.artistFromDB()
     }

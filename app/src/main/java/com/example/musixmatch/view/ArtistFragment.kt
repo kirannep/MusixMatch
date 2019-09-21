@@ -46,10 +46,10 @@ class ArtistFragment : Fragment() {
         viewModel = ViewModelProviders.of(this,fragmentArtistModelFactory).get(ArtistViewModel::class.java)
         //viewModel.getArtistFromRetrofit()
         viewModel.RetrofitArtist()?.observe(this,
-            Observer<BaseModel> {
+            Observer<List<Artist>> {
                     t ->
-                Log.i("resultFromRetrofit", ""+t.message.body.artist_list[0].artist.artist_name)
-                Log.i("ratingFromRetrofit", ""+t.message.body.artist_list[0].artist.artist_rating)
+                Log.i("resultFromRetrofit", ""+t[0].artist_name)
+//                Log.i("ratingFromRetrofit", ""+t.message.body.artist_list[0].artist.artist_rating)
                 artistAdapterData(t)
             })
 
@@ -58,23 +58,23 @@ class ArtistFragment : Fragment() {
 //        val artistCakeInfoFromDB:MutableLiveData<List<Artist>>? = viewModel.artistFromDB()
 
         //DATABASE
-        viewModel.DBArtist()?.observe(this,object:Observer<Artist>{
-            override fun onChanged(t: Artist) {
+        viewModel.DBArtist()?.observe(this,object:Observer<List<Artist>>{
+            override fun onChanged(t: List<Artist>) {
 //                    Log.d("artistfromdb", t!![0].artist_country)
 //                Log.d("artistfromdb", t!![1].artist_country)
 //                Log.d("artistfromdb", t!![2].artist_country)
-                DBartistAdapterData(t)
+                //DBartistAdapterData(t)
             }
         })
     }
 
-    private fun artistAdapterData(t:BaseModel){
+    private fun artistAdapterData(t:List<Artist>){
         val adapter = ArtistAdapter(t)
         recyclerview_artist.layoutManager = LinearLayoutManager(context)
         recyclerview_artist.adapter = adapter
     }
 
-    private fun DBartistAdapterData(t:Artist){
+    private fun DBartistAdapterData(t:List<Artist>){
         val adapter = ArtistAdapter(t)
         recyclerview_artist.layoutManager = LinearLayoutManager(context)
         recyclerview_artist.adapter = adapter

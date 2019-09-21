@@ -12,8 +12,8 @@ import io.reactivex.Observable
 @Dao
 interface ArtistSearchAccess {
     @Query("SELECT * FROM artistsearch")
-    fun getArtist():Observable<Artist>
+    fun getArtist():Observable<List<Artist>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertArtist(insertArtist:Artist):Completable
+    fun insertArtist(insertArtist:List<Artist>):Completable
 }
