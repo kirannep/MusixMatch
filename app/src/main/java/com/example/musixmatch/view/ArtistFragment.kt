@@ -26,6 +26,8 @@ class ArtistFragment : Fragment() {
     @Inject
     lateinit var fragmentArtistModelFactory: FragmentArtistModelFactory
     private lateinit var viewModel: ArtistViewModel
+    private var list:List<Artist>? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,13 +50,14 @@ class ArtistFragment : Fragment() {
                     t ->
                 Log.i("resultFromRetrofit", ""+t.message.body.artist_list[0].artist.artist_name)
                 Log.i("ratingFromRetrofit", ""+t.message.body.artist_list[0].artist.artist_rating)
-                    artistAdapterData(t.message.body.artist_list[0].artist)
-
+                artistAdapterData(listOf(t.message.body.artist_list[0].artist))
             })
 
 
         //viewModel.getArtistFromDB()
 //        val artistCakeInfoFromDB:MutableLiveData<List<Artist>>? = viewModel.artistFromDB()
+
+        //DATABASE
 //        viewModel.DBArtist()?.observe(this,object:Observer<List<Artist>>{
 //            override fun onChanged(t: List<Artist>?) {
 //                    Log.d("artistfromdb", t!![0].artist_country)
