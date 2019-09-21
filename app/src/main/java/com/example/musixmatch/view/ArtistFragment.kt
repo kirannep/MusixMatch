@@ -60,11 +60,7 @@ class ArtistFragment : Fragment() {
                     Log.d("artistfromdb", t!![0].artist_country)
                 Log.d("artistfromdb", t!![1].artist_country)
                 Log.d("artistfromdb", t!![2].artist_country)
-
-
-
             }
-
         })
     }
 

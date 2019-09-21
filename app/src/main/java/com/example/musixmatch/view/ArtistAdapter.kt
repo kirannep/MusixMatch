@@ -30,3 +30,4 @@ class ArtistViewHolder(view: View):RecyclerView.ViewHolder(view){
     val artist_rating = view.tv_rating
     val artist_country = view.tv_country
 }
+
