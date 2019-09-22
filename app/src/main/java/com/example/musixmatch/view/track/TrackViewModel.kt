@@ -42,8 +42,7 @@ class TrackViewModel @Inject constructor(application: Application, val clientInt
 
             override fun onNext(t: BaseModelTrack) {
                 track?.value = t
-                Log.d("basemodeltrack",t.message.body.track_list[0].track.track_name)
-                Log.d("basemodeltrack2",t.message.body.track_list[1].track.track_name)
+
 
 
             }

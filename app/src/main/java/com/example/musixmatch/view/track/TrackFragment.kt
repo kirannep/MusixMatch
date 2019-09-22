@@ -7,11 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.example.musixmatch.R
 import com.example.musixmatch.dependency_injection.component.DaggerAppComponent
 import com.example.musixmatch.dependency_injection.network_module.NetworkModule
+import com.example.musixmatch.model.track.BaseModelTrack
+import kotlinx.android.synthetic.main.fragment_track.*
 import javax.inject.Inject
 
 
@@ -43,15 +47,18 @@ class TrackFragment : Fragment() {
         if (artistNameFromBundle != null) {
             trackviewModel.getTrackFromRetrofit(artistNameFromBundle)
         }
-//        viewModel.trackRetrofit()?.observe(this,object:Observer<BaseModelTrack>{
-//            override fun onChanged(t: BaseModelTrack?) {
-//                Log.d("tracksuccess",t)
-//            }
-//
-//        })
+        trackviewModel.trackRetrofit()?.observe(this,Observer<BaseModelTrack>{
+                t ->
+            Log.d("basemodeltrack",t.message.body.track_list[0].track.track_name)
+            Log.d("basemodeltrack2",t.message.body.track_list[1].track.track_name)
+            trackAdapter(t)
+        })
     }
 
-
-
+    private fun trackAdapter(t:BaseModelTrack){
+        val adapter = TrackAdapter(t)
+        trackRecyclerView.layoutManager = LinearLayoutManager(context)
+        trackRecyclerView.adapter = adapter
+    }
 
 }
