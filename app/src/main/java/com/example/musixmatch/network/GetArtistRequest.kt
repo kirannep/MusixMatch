@@ -16,4 +16,7 @@ interface GetArtistRequest {
 
     @GET("track.search?&page_size=5&page=1&s_track_rating=desc")
     fun getTrackOfArtist(@Query("q_artist") q_artist:String,@Query("apikey") apikey:String) :Observable<BaseModelTrack>
+
+
+
 }
