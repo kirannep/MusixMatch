@@ -104,4 +104,11 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
         return artistdb
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        Log.i("Destroy ", "ViewModel Destroyed")
+    }
+    fun onDestroy() {
+        compositeDisposable.clear()
+    }
 }

@@ -16,6 +16,7 @@ import com.example.musixmatch.dependency_injection.component.DaggerAppComponent
 import com.example.musixmatch.dependency_injection.network_module.NetworkModule
 import com.example.musixmatch.model.artist.Artist
 import com.example.musixmatch.model.artist.BaseModel
+import com.example.musixmatch.view.track.TrackFragment
 import kotlinx.android.synthetic.main.fragment_artist.*
 import javax.inject.Inject
 
@@ -65,11 +66,29 @@ class ArtistFragment : Fragment() {
         val adapter = ArtistAdapter(t,
             object : onClickArtistListener {
                 override fun onClickedArtist(artist: Artist) {
+                    val fragmentManager = activity?.supportFragmentManager
+                    val transaction = fragmentManager?.beginTransaction()
+                    val args = Bundle()
+                    args.putString("artistName",artist.artist_name)
+                    Log.d("firstFragmentartistname",artist.artist_name)
+//                    args.putInt("artistId",artist.artist_id)
+                    val trackFragment = TrackFragment()
+                    trackFragment.arguments = args
+                    transaction?.replace(R.id.fragmentContainer,trackFragment)
 
+                        ?.addToBackStack(null)
+                        ?.commit()
                 }
-
             })
         recyclerview_artist.layoutManager = LinearLayoutManager(context)
         recyclerview_artist.adapter = adapter
     }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
+    }
+
+
 }
