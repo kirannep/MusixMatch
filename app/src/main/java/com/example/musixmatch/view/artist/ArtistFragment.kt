@@ -35,13 +35,17 @@ class ArtistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val artistFromBundle = arguments?.getString("searchArtist")
         DaggerAppComponent.builder()
             .networkModule(NetworkModule(activity!!.application))
             .build()
             .inject(this)
 
         viewModel = ViewModelProviders.of(this,fragmentArtistModelFactory).get(ArtistViewModel::class.java)
-        viewModel.getArtistFromRetrofit()
+        if (artistFromBundle != null) {
+            viewModel.getArtistFromRetrofit(artistFromBundle)
+        }
         viewModel.artistRetrofit()?.observe(this,
             Observer<BaseModel> {
                     t ->

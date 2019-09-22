@@ -9,8 +9,8 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface GetArtistRequest {
-    @GET("artist.search?q_artist=ed&page_size=5")
-    fun getartist(@Query("apikey") apikey:String) :Observable<BaseModel>
+    @GET("artist.search?&page_size=5")
+    fun getartist(@Query("q_artist") q_artist:String,@Query("apikey") apikey:String) :Observable<BaseModel>
 
 //    @GET("track.search?q_artist=prodigy&page_size=5&page=1&s_track_rating=desc")
 //    fun getTrackOfArtist(@Query("apikey") apikey:String) :Observable<BaseModelTrack>

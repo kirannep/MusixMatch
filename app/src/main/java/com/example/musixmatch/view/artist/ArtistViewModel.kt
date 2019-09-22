@@ -29,9 +29,9 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
     var showProgressBar:MutableLiveData<Boolean> = MutableLiveData()
 
     //retrofit
-    fun getArtistFromRetrofit(){
+    fun getArtistFromRetrofit(artistname:String){
         showProgressBar.value = true
-        val call: Observable<BaseModel> = clientInterface.getartist(Constants.API_KEY)
+        val call: Observable<BaseModel> = clientInterface.getartist(artistname,Constants.API_KEY)
         call
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
