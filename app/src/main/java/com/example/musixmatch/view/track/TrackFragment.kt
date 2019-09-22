@@ -15,6 +15,8 @@ import com.example.musixmatch.R
 import com.example.musixmatch.dependency_injection.component.DaggerAppComponent
 import com.example.musixmatch.dependency_injection.network_module.NetworkModule
 import com.example.musixmatch.model.track.BaseModelTrack
+import com.example.musixmatch.model.track.Track
+import com.example.musixmatch.view.lyrics.LyricsFragment
 import kotlinx.android.synthetic.main.fragment_track.*
 import javax.inject.Inject
 
@@ -56,7 +58,19 @@ class TrackFragment : Fragment() {
     }
 
     private fun trackAdapter(t:BaseModelTrack){
-        val adapter = TrackAdapter(t)
+        val adapter = TrackAdapter(t,object: onTrackClickListener{
+            override fun onTrackCliked(track: Track) {
+                val fragmentManager = activity?.supportFragmentManager
+                val transaction = fragmentManager?.beginTransaction()
+                val args = Bundle()
+                args.putInt("trackId",track.track_id)
+                val lyricsFragment = LyricsFragment()
+                lyricsFragment.arguments = args
+                transaction?.replace(R.id.fragmentContainer,lyricsFragment)
+                    ?.addToBackStack(null)
+                    ?.commit()
+            }
+        })
         trackRecyclerView.layoutManager = LinearLayoutManager(context)
         trackRecyclerView.adapter = adapter
     }

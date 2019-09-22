@@ -42,9 +42,6 @@ class TrackViewModel @Inject constructor(application: Application, val clientInt
 
             override fun onNext(t: BaseModelTrack) {
                 track?.value = t
-
-
-
             }
 
             override fun onError(e: Throwable) {

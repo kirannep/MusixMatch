@@ -4,6 +4,7 @@ import android.app.Application
 import com.example.musixmatch.common.Constants
 import com.example.musixmatch.network.GetArtistRequest
 import com.example.musixmatch.view.artist.FragmentArtistModelFactory
+import com.example.musixmatch.view.lyrics.FragmentLyricsModelFactory
 import com.example.musixmatch.view.track.FragmentTrackModelFactory
 import dagger.Module
 import dagger.Provides
@@ -60,5 +61,11 @@ class NetworkModule(private val application: Application) {
     @Singleton
     fun provideTrackViewModelFactory(clientInterface:GetArtistRequest,application: Application): FragmentTrackModelFactory {
         return FragmentTrackModelFactory(clientInterface, application)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLyricsViewModelFactory(clientInterface:GetArtistRequest,application: Application): FragmentLyricsModelFactory {
+        return FragmentLyricsModelFactory(clientInterface, application)
     }
 }
