@@ -26,10 +26,11 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
     val getArtistRequest:Observable<List<Artist>> = artistDBrequest.getArtist()
     val artistRoomObserver = ArtistRoomObserver()
     private val artistdb:MutableLiveData<List<Artist>>? = MutableLiveData()
-
+    var showProgressBar:MutableLiveData<Boolean> = MutableLiveData()
 
     //retrofit
     fun getArtistFromRetrofit(){
+        showProgressBar.value = true
         val call: Observable<BaseModel> = clientInterface.getartist(Constants.API_KEY)
         call
             .subscribeOn(Schedulers.io())
@@ -50,6 +51,7 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
             override fun onNext(t: BaseModel) {
                 artist?.value = t
                     insertArtistinDB(t.message.body.artist_list[1].artist)
+                    showProgressBar.value = false
             }
 
             override fun onError(e: Throwable) {
@@ -102,6 +104,10 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
 
     fun artistFromDB():MutableLiveData<List<Artist>>?{
         return artistdb
+    }
+
+    fun showProgress():MutableLiveData<Boolean>{
+        return showProgressBar
     }
 
     override fun onCleared() {

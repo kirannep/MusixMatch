@@ -60,6 +60,18 @@ class ArtistFragment : Fragment() {
                 Log.d("artistfromdb", t!![2].artist_country)
             }
         })
+
+        viewModel.showProgress().observe(this,object:Observer<Boolean>{
+            override fun onChanged(t: Boolean?) {
+                if(t == true){
+                    pgbar_artist.visibility = View.VISIBLE
+                }
+                if(t == false){
+                    pgbar_artist.visibility = View.GONE
+                }
+            }
+
+        })
     }
 
     private fun artistAdapterData(t: BaseModel){

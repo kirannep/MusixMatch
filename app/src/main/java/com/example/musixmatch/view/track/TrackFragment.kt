@@ -55,6 +55,18 @@ class TrackFragment : Fragment() {
             Log.d("basemodeltrack2",t.message.body.track_list[1].track.track_name)
             trackAdapter(t)
         })
+
+        trackviewModel.showProgress().observe(this,object:Observer<Boolean>{
+            override fun onChanged(t: Boolean?) {
+                if (t == true){
+                    pgbar_track.visibility = View.VISIBLE
+                }
+                if (t == false){
+                    pgbar_track.visibility = View.GONE
+                }
+            }
+
+        })
     }
 
     private fun trackAdapter(t:BaseModelTrack){

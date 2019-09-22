@@ -21,8 +21,10 @@ class LyricsViewModel @Inject constructor(application: Application, val clientIn
     val lyricsObserver = LyricsObserver()
     val compositeDisposable = CompositeDisposable()
     private val lyrics:MutableLiveData<BaseModelLyrics> = MutableLiveData()
+    private val showProgressBar:MutableLiveData<Boolean> = MutableLiveData()
 
     fun getLyricsFromRetrofit(id:Int){
+        showProgressBar.value = true
         val call: Observable<BaseModelLyrics> = clientInterface.getLyricsOfTrack(id,Constants.API_KEY)
         call
             .observeOn(AndroidSchedulers.mainThread())
@@ -42,6 +44,7 @@ class LyricsViewModel @Inject constructor(application: Application, val clientIn
 
             override fun onNext(t: BaseModelLyrics) {
                 lyrics?.value = t
+                showProgressBar.value = false
             }
 
             override fun onError(e: Throwable) {
@@ -52,6 +55,10 @@ class LyricsViewModel @Inject constructor(application: Application, val clientIn
 
     fun getLyrics():MutableLiveData<BaseModelLyrics>?{
         return lyrics
+    }
+
+    fun showprogress():MutableLiveData<Boolean>{
+        return showProgressBar
     }
 
 }

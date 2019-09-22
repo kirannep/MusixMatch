@@ -20,8 +20,10 @@ class TrackViewModel @Inject constructor(application: Application, val clientInt
     val trackObserver = TrackObserver()
     val compositeDisposable = CompositeDisposable()
     private val track: MutableLiveData<BaseModelTrack>? = MutableLiveData()
+    var showProgressBar:MutableLiveData<Boolean> = MutableLiveData()
 
     fun getTrackFromRetrofit(artistName:String) {
+        showProgressBar.value = true
         val call: Observable<BaseModelTrack> = clientInterface.getTrackOfArtist(artistName,Constants.API_KEY)
         Log.d("call",call.toString())
         call
@@ -42,6 +44,7 @@ class TrackViewModel @Inject constructor(application: Application, val clientInt
 
             override fun onNext(t: BaseModelTrack) {
                 track?.value = t
+                showProgressBar.value = false
             }
 
             override fun onError(e: Throwable) {
@@ -52,6 +55,10 @@ class TrackViewModel @Inject constructor(application: Application, val clientInt
 
     fun trackRetrofit():MutableLiveData<BaseModelTrack>?{
         return track
+    }
+
+    fun showProgress():MutableLiveData<Boolean>{
+        return showProgressBar
     }
 
 }

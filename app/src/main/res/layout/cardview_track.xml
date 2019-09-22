@@ -24,8 +24,8 @@
                 android:textSize="25sp"
                 android:textStyle="bold"
                 android:textAlignment="center"
-                android:layout_width="248dp"
-                android:layout_height="43dp"
+                android:layout_width="298dp"
+                android:layout_height="67dp"
                 android:id="@+id/tv_trackName" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp" android:layout_marginTop="16dp"
@@ -33,19 +33,19 @@
         <TextView
                 android:text="ALBUM ::"
                 android:textStyle="italic"
-                android:textAlignment="textEnd"
-                android:layout_width="80dp"
-                android:layout_height="22dp"
+                android:textAlignment="center"
+                android:layout_width="89dp"
+                android:layout_height="23dp"
                 android:id="@+id/textView2" app:layout_constraintEnd_toStartOf="@+id/tv_albumName"
-                android:layout_marginEnd="12dp" android:layout_marginBottom="40dp"
+                android:layout_marginEnd="12dp" android:layout_marginBottom="24dp"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.918"/>
+                android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.47"/>
         <TextView
                 android:text="ALBUM NAME"
                 android:textStyle="italic"
                 android:layout_width="211dp"
                 android:layout_height="27dp"
-                android:id="@+id/tv_albumName" android:layout_marginBottom="40dp"
+                android:id="@+id/tv_albumName" android:layout_marginBottom="24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="52dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>

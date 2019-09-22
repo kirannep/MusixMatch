@@ -15,6 +15,7 @@
                 android:layout_width="328dp"
                 android:layout_height="583dp"
                 android:text="Lyrics"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -24,5 +25,12 @@
                 app:layout_constraintHorizontal_bias="0.492"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ProgressBar
+                 android:id="@+id/pgbar_lyrics"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center"
+                 android:visibility="gone"
+    />
 
 </FrameLayout>
