@@ -46,6 +46,7 @@ class ArtistFragment : Fragment() {
         if (artistFromBundle != null) {
             viewModel.getArtistFromRetrofit(artistFromBundle)
         }
+        //FROM RETROFIT
         viewModel.artistRetrofit()?.observe(this,
             Observer<BaseModel> {
                     t ->
@@ -55,6 +56,7 @@ class ArtistFragment : Fragment() {
             })
 
 
+        //FROM DB
         viewModel.getArtistFromDB()
         val artistCakeInfoFromDB:MutableLiveData<List<Artist>>? = viewModel.artistFromDB()
         artistCakeInfoFromDB?.observe(this,object:Observer<List<Artist>>{
