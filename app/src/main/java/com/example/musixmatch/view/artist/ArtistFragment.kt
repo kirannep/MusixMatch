@@ -58,16 +58,16 @@ class ArtistFragment : Fragment() {
 
 
         //FROM DB
-        viewModel.getArtistFromDB()
-        val artistCakeInfoFromDB: MutableLiveData<List<Artist_list>>? = viewModel.artistFromDB()
-        artistCakeInfoFromDB?.observe(this,object:Observer<List<Artist_list>>{
-            override fun onChanged(t: List<Artist_list>?) {
-//                    Log.d("artistfromdb", t!![0].artist_country)
-//                Log.d("artistfromdb", t!![1].artist_country)
-//                Log.d("artistfromdb", t!![2].artist_country)
-                artistAdapterData(t)
-            }
-        })
+//        viewModel.getArtistFromDB()
+//        val artistCakeInfoFromDB: MutableLiveData<List<Artist_list>>? = viewModel.artistFromDB()
+//        artistCakeInfoFromDB?.observe(this,object:Observer<List<Artist_list>>{
+//            override fun onChanged(t: List<Artist_list>?) {
+////                    Log.d("artistfromdb", t!![0].artist_country)
+////                Log.d("artistfromdb", t!![1].artist_country)
+////                Log.d("artistfromdb", t!![2].artist_country)
+//                artistAdapterData(t)
+//            }
+//        })
 
         viewModel.showProgress().observe(this,object:Observer<Boolean>{
             override fun onChanged(t: Boolean?) {
@@ -83,7 +83,7 @@ class ArtistFragment : Fragment() {
         })
     }
 
-    private fun artistAdapterData(t: List<Artist_list>?){
+    private fun artistAdapterData(t: List<Artist_list>){
         val adapter = ArtistAdapter(t,
             object : onClickArtistListener {
                 override fun onClickedArtist(artist: Artist) {

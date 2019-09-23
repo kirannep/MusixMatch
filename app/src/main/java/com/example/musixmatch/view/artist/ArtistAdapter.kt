@@ -9,7 +9,7 @@ import com.example.musixmatch.model.artist.Artist
 import com.example.musixmatch.model.artist.Artist_list
 import kotlinx.android.synthetic.main.cardview.view.*
 
-class ArtistAdapter(private val artist: List<Artist_list>?, private val listener: onClickArtistListener):RecyclerView.Adapter<ArtistViewHolder>() {
+class ArtistAdapter(private val artist: List<Artist_list>, private val listener: onClickArtistListener):RecyclerView.Adapter<ArtistViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
         return ArtistViewHolder(
             LayoutInflater.from(parent.context).inflate(

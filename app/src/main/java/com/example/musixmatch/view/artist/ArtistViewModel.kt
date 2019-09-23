@@ -50,11 +50,11 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
 
             override fun onNext(t: BaseModel) {
                 artist?.value = t.message.body.artist_list
-                insertArtistinDB(t.message.body.artist_list)
-                for (i in 0..t.message.body.artist_list.size-1){
-//                    insertArtistinDB(t.message.body.artist_list.get(i).artist)
-
-                }
+//                insertArtistinDB(t.message.body.artist_list)
+//                for (i in 0..t.message.body.artist_list.size-1){
+////                    insertArtistinDB(t.message.body.artist_list.get(i).artist)
+//
+//                }
                     showProgressBar.value = false
             }
 
