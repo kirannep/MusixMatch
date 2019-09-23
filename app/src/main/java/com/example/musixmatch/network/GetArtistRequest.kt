@@ -1,5 +1,6 @@
 package com.example.musixmatch.network
 
+import com.example.musixmatch.model.artist.Artist
 import com.example.musixmatch.model.artist.BaseModel
 import com.example.musixmatch.model.lyrics.BaseModelLyrics
 import com.example.musixmatch.model.track.BaseModelTrack

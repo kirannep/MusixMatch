@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.musixmatch.common.Constants
 import com.example.musixmatch.database.ArtistDatabase
-import com.example.musixmatch.model.artist.Artist
+import com.example.musixmatch.model.artist.Artist_list
 import com.example.musixmatch.model.artist.BaseModel
 import com.example.musixmatch.network.GetArtistRequest
 import io.reactivex.Observable
@@ -20,12 +20,12 @@ import javax.inject.Inject
 class ArtistViewModel @Inject constructor(application: Application, val clientInterface: GetArtistRequest):ViewModel() {
     val artistObserver=ArtistObserver()
     val compositeDisposable = CompositeDisposable()
-    private val artist: MutableLiveData<BaseModel>? = MutableLiveData()
+    private val artist: MutableLiveData<List<Artist_list>>? = MutableLiveData()
     val artistDBrequest = ArtistDatabase.getInstance(application).artistDAO()
     var showSuccess: MutableLiveData<Boolean> = MutableLiveData()
-    val getArtistRequest:Observable<List<Artist>> = artistDBrequest.getArtist()
+    val getArtistRequest:Observable<List<Artist_list>> = artistDBrequest.getArtist()
     val artistRoomObserver = ArtistRoomObserver()
-    private val artistdb:MutableLiveData<List<Artist>>? = MutableLiveData()
+    private val artistdb:MutableLiveData<List<Artist_list>>? = MutableLiveData()
     var showProgressBar:MutableLiveData<Boolean> = MutableLiveData()
 
     //retrofit
@@ -49,23 +49,28 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
             }
 
             override fun onNext(t: BaseModel) {
-                artist?.value = t
-                    insertArtistinDB(t.message.body.artist_list[1].artist)
+                artist?.value = t.message.body.artist_list
+                insertArtistinDB(t.message.body.artist_list)
+                for (i in 0..t.message.body.artist_list.size-1){
+//                    insertArtistinDB(t.message.body.artist_list.get(i).artist)
+
+                }
                     showProgressBar.value = false
             }
 
             override fun onError(e: Throwable) {
-                Log.d("errormsgRetrofit",e.message)
+                Log.d("errormsgRetrofit","Something went wrong")
             }
         }
     }
 
-    fun artistRetrofit():MutableLiveData<BaseModel>?{
+    fun artistRetrofit(): MutableLiveData<List<Artist_list>>? {
         return artist
     }
 
     //database
-    fun insertArtistinDB(t: Artist){
+    fun insertArtistinDB(t: List<Artist_list>){
+
             artistDBrequest.insertArtist(t)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -82,8 +87,8 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
             .subscribe(artistRoomObserver)
     }
 
-    private fun ArtistRoomObserver():Observer<List<Artist>>{
-        return object: Observer<List<Artist>>{
+    private fun ArtistRoomObserver():Observer<List<Artist_list>>{
+        return object: Observer<List<Artist_list>>{
             override fun onComplete() {
                 Log.d("emittedFromDB","all items emitted")
             }
@@ -92,7 +97,7 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
                 compositeDisposable.add(d)
             }
 
-            override fun onNext(t: List<Artist>) {
+            override fun onNext(t: List<Artist_list>) {
                 artistdb?.value = t
             }
 
@@ -102,7 +107,7 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
         }
     }
 
-    fun artistFromDB():MutableLiveData<List<Artist>>?{
+    fun artistFromDB():MutableLiveData<List<Artist_list>>?{
         return artistdb
     }
 
