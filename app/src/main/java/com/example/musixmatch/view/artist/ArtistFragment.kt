@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musixmatch.R
 import com.example.musixmatch.dependency_injection.component.DaggerAppComponent
 import com.example.musixmatch.dependency_injection.network_module.NetworkModule
+import com.example.musixmatch.dependency_injection.repository_module.ArtistRepositoryModule
 import com.example.musixmatch.model.artist.Artist
 import com.example.musixmatch.model.artist.BaseModel
-import com.example.musixmatch.view.track.TrackFragment
 import kotlinx.android.synthetic.main.fragment_artist.*
 import javax.inject.Inject
 
@@ -25,6 +24,7 @@ class ArtistFragment : Fragment() {
     @Inject
     lateinit var fragmentArtistModelFactory: FragmentArtistModelFactory
     private lateinit var viewModel: ArtistViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,11 +36,13 @@ class ArtistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val artistFromBundle = arguments?.getString("searchArtist")
         DaggerAppComponent.builder()
             .networkModule(NetworkModule(activity!!.application))
+            .artistRepositoryModule(ArtistRepositoryModule())
             .build()
-            .inject(this)
+
+        val artistFromBundle = arguments?.getString("searchArtist")
+
 
         viewModel = ViewModelProviders.of(this,fragmentArtistModelFactory).get(ArtistViewModel::class.java)
         if (artistFromBundle != null) {
@@ -57,15 +59,15 @@ class ArtistFragment : Fragment() {
 
 
         //FROM DB
-        viewModel.getArtistFromDB()
-        val artistCakeInfoFromDB:MutableLiveData<List<Artist>>? = viewModel.artistFromDB()
-        artistCakeInfoFromDB?.observe(this,object:Observer<List<Artist>>{
-            override fun onChanged(t: List<Artist>?) {
-                    Log.d("artistfromdb", t!![0].artist_country)
-                Log.d("artistfromdb", t!![1].artist_country)
-                Log.d("artistfromdb", t!![2].artist_country)
-            }
-        })
+//        viewModel.getArtistFromDB()
+//        val artistCakeInfoFromDB:MutableLiveData<List<Artist>>? = viewModel.artistFromDB()
+//        artistCakeInfoFromDB?.observe(this,object:Observer<List<Artist>>{
+//            override fun onChanged(t: List<Artist>?) {
+//                    Log.d("artistfromdb", t!![0].artist_country)
+//                Log.d("artistfromdb", t!![1].artist_country)
+//                Log.d("artistfromdb", t!![2].artist_country)
+//            }
+//        })
 
         viewModel.showProgress().observe(this,object:Observer<Boolean>{
             override fun onChanged(t: Boolean?) {
@@ -90,12 +92,12 @@ class ArtistFragment : Fragment() {
                     args.putString("artistName",artist.artist_name)
                     Log.d("firstFragmentartistname",artist.artist_name)
 //                    args.putInt("artistId",artist.artist_id)
-                    val trackFragment = TrackFragment()
-                    trackFragment.arguments = args
-                    transaction?.replace(R.id.fragmentContainer,trackFragment)
+//                    val trackFragment = TrackFragment()
+//                    trackFragment.arguments = args
+//                    transaction?.replace(R.id.fragmentContainer,trackFragment)
 
-                        ?.addToBackStack(null)
-                        ?.commit()
+//                        ?.addToBackStack(null)
+//                        ?.commit()
                 }
             })
         recyclerview_artist.layoutManager = LinearLayoutManager(context)

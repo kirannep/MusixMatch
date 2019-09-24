@@ -17,22 +17,23 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class ArtistViewModel @Inject constructor(application: Application, val clientInterface: GetArtistRequest):ViewModel() {
+class ArtistViewModel (val artistRepository: ArtistRepository):ViewModel() {
     val artistObserver=ArtistObserver()
     val compositeDisposable = CompositeDisposable()
     private val artist: MutableLiveData<BaseModel>? = MutableLiveData()
-    val artistDBrequest = ArtistDatabase.getInstance(application).artistDAO()
+//    val artistDBrequest = ArtistDatabase.getInstance(application).artistDAO()
     var showSuccess: MutableLiveData<Boolean> = MutableLiveData()
-    val getArtistRequest:Observable<List<Artist>> = artistDBrequest.getArtist()
+//    val getArtistRequest:Observable<List<Artist>> = artistDBrequest.getArtist()
     val artistRoomObserver = ArtistRoomObserver()
     private val artistdb:MutableLiveData<List<Artist>>? = MutableLiveData()
     var showProgressBar:MutableLiveData<Boolean> = MutableLiveData()
 
+//     artistRepository = ArtistRepository(application,clientInterface)
     //retrofit
     fun getArtistFromRetrofit(artistname:String){
         showProgressBar.value = true
-        val call: Observable<BaseModel> = clientInterface.getartist(artistname,Constants.API_KEY)
-        call
+//        val call: Observable<BaseModel> = clientInterface.getartist(artistname,Constants.API_KEY)
+        artistRepository.ArtistFromRetrofit(artistname)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(artistObserver)
@@ -50,7 +51,7 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
 
             override fun onNext(t: BaseModel) {
                 artist?.value = t
-                    insertArtistinDB(t.message.body.artist_list[1].artist)
+//                    insertArtistinDB(t.message.body.artist_list[1].artist)
                     showProgressBar.value = false
             }
 
@@ -65,22 +66,22 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
     }
 
     //database
-    fun insertArtistinDB(t: Artist){
-            artistDBrequest.insertArtist(t)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({showSuccess.value = true},{
-                    Log.i("ViewModel error",it.message)
-                    showSuccess.value=false})
-    }
+//    fun insertArtistinDB(t: Artist){
+//            artistDBrequest.insertArtist(t)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({showSuccess.value = true},{
+//                    Log.i("ViewModel error",it.message)
+//                    showSuccess.value=false})
+//    }
 
     //get data from database
-    fun getArtistFromDB(){
-        getArtistRequest
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(artistRoomObserver)
-    }
+//    fun getArtistFromDB(){
+//        getArtistRequest
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe(artistRoomObserver)
+//    }
 
     private fun ArtistRoomObserver():Observer<List<Artist>>{
         return object: Observer<List<Artist>>{
