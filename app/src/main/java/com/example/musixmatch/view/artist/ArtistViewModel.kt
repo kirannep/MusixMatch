@@ -4,12 +4,10 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.musixmatch.common.Constants
-import com.example.musixmatch.database.ArtistDatabase
 import com.example.musixmatch.model.artist.Artist
+import com.example.musixmatch.model.artist.Artist_list
 import com.example.musixmatch.model.artist.BaseModel
 import com.example.musixmatch.network.GetArtistRequest
-import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -18,21 +16,22 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class ArtistViewModel @Inject constructor(application: Application, val clientInterface: GetArtistRequest):ViewModel() {
+
     val artistObserver=ArtistObserver()
     val compositeDisposable = CompositeDisposable()
     private val artist: MutableLiveData<BaseModel>? = MutableLiveData()
-    val artistDBrequest = ArtistDatabase.getInstance(application).artistDAO()
     var showSuccess: MutableLiveData<Boolean> = MutableLiveData()
-    val getArtistRequest:Observable<List<Artist>> = artistDBrequest.getArtist()
     val artistRoomObserver = ArtistRoomObserver()
     private val artistdb:MutableLiveData<List<Artist>>? = MutableLiveData()
     var showProgressBar:MutableLiveData<Boolean> = MutableLiveData()
+    private val artistRepository = ArtistRepository(application,clientInterface)
+    private val individualArtistdb:MutableLiveData<List<Artist>>? = MutableLiveData()
+
 
     //retrofit
     fun getArtistFromRetrofit(artistname:String){
         showProgressBar.value = true
-        val call: Observable<BaseModel> = clientInterface.getartist(artistname,Constants.API_KEY)
-        call
+        artistRepository.artistFromRetrofit(artistname)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(artistObserver)
@@ -50,7 +49,10 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
 
             override fun onNext(t: BaseModel) {
                 artist?.value = t
-                    insertArtistinDB(t.message.body.artist_list[1].artist)
+                   // insertArtistinDB(t.message.body.artist_list.)
+                    insertArtistinDB((listOf(t.message.body.artist_list[0].artist)))
+//                insertArtistinDB(t.message.body.artist_list[0].artist)
+
                     showProgressBar.value = false
             }
 
@@ -65,18 +67,19 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
     }
 
     //database
-    fun insertArtistinDB(t: Artist){
-            artistDBrequest.insertArtist(t)
+    fun insertArtistinDB(t: List<Artist>){
+                compositeDisposable.add(
+                artistRepository.insertArtistInDB(t)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({showSuccess.value = true},{
                     Log.i("ViewModel error",it.message)
-                    showSuccess.value=false})
+                    showSuccess.value=false}))
     }
 
     //get data from database
     fun getArtistFromDB(){
-        getArtistRequest
+        artistRepository.getArtistFromDB()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(artistRoomObserver)
@@ -104,6 +107,38 @@ class ArtistViewModel @Inject constructor(application: Application, val clientIn
 
     fun artistFromDB():MutableLiveData<List<Artist>>?{
         return artistdb
+    }
+
+    fun getIndividualArtistFromDB(artistname: String){
+        artistRepository.getIndividualFromDB(artistname)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(IndividualArtistRoomObserver())
+    }
+
+    private fun IndividualArtistRoomObserver():Observer<List<Artist>>{
+        return object: Observer<List<Artist>>{
+            override fun onComplete() {
+                Log.d("IndividualemittedFromDB","all items emitted")
+            }
+
+            override fun onSubscribe(d: Disposable) {
+                compositeDisposable.add(d)
+            }
+
+            override fun onNext(t: List<Artist>) {
+                individualArtistdb?.value = t
+            }
+
+            override fun onError(e: Throwable) {
+                Log.d("errorIndividualRoom",e.message)
+            }
+
+        }
+    }
+
+    fun individualArtistFromDB():MutableLiveData<List<Artist>>?{
+        return individualArtistdb
     }
 
     fun showProgress():MutableLiveData<Boolean>{

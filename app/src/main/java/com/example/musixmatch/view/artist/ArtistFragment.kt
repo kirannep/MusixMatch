@@ -6,16 +6,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.example.musixmatch.R
 import com.example.musixmatch.dependency_injection.component.DaggerAppComponent
 import com.example.musixmatch.dependency_injection.network_module.NetworkModule
 import com.example.musixmatch.model.artist.Artist
+import com.example.musixmatch.model.artist.Artist_list
 import com.example.musixmatch.model.artist.BaseModel
+import com.example.musixmatch.model.artist.Body
 import com.example.musixmatch.view.track.TrackFragment
 import kotlinx.android.synthetic.main.fragment_artist.*
 import javax.inject.Inject
@@ -37,35 +41,56 @@ class ArtistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val artistFromBundle = arguments?.getString("searchArtist")
+
         DaggerAppComponent.builder()
             .networkModule(NetworkModule(activity!!.application))
             .build()
             .inject(this)
 
+
+
+
         viewModel = ViewModelProviders.of(this,fragmentArtistModelFactory).get(ArtistViewModel::class.java)
         if (artistFromBundle != null) {
             viewModel.getArtistFromRetrofit(artistFromBundle)
         }
-        //FROM RETROFIT
+//        FROM RETROFIT
         viewModel.artistRetrofit()?.observe(this,
             Observer<BaseModel> {
                     t ->
                 Log.i("resultFromRetrofit", ""+t.message.body.artist_list[0].artist.artist_name)
                 Log.i("ratingFromRetrofit", ""+t.message.body.artist_list[0].artist.artist_rating)
-                artistAdapterData(t)
+                    artistAdapterData(t.message.body.artist_list)
             })
 
 
         //FROM DB
+//        if (artistFromBundle != null) {
+//            viewModel.getIndividualArtistFromDB(artistFromBundle)
+//        }
+//        val individualArtistFromDB:MutableLiveData<List<Artist_list>>? = viewModel.individualArtistFromDB()
+//        individualArtistFromDB?.observe(this,object:Observer<List<Artist_list>>{
+//            override fun onChanged(t: List<Artist_list>?) {
+//                Log.d("indiartistfromdb",""+t!![0].artist.artist_name)
+//            }
+//
+//        })
+
         viewModel.getArtistFromDB()
-        val artistCakeInfoFromDB:MutableLiveData<List<Artist>>? = viewModel.artistFromDB()
-        artistCakeInfoFromDB?.observe(this,object:Observer<List<Artist>>{
+
+        val artistInfoFromDB:MutableLiveData<List<Artist>>? = viewModel.artistFromDB()
+        artistInfoFromDB?.observe(this,object:Observer<List<Artist>>{
             override fun onChanged(t: List<Artist>?) {
-                    Log.d("artistfromdb", t!![0].artist_country)
-                Log.d("artistfromdb", t!![1].artist_country)
+//                    Log.d("artistfromdb", t!![0].artist.artist_name)
+                Log.d("artistfromdb", t!![0].artist_country)
+                Log.d("artistfromDB",t!![0].artist_name)
+                Log.d("artistratingDB",t!![0].artist_rating.toString())
                 Log.d("artistfromdb", t!![2].artist_country)
+//                artistAdapterData(t)
             }
         })
+
+
 
         viewModel.showProgress().observe(this,object:Observer<Boolean>{
             override fun onChanged(t: Boolean?) {
@@ -78,9 +103,18 @@ class ArtistFragment : Fragment() {
             }
 
         })
+
+        viewModel.showSuccess.observe(this,object:Observer<Boolean>{
+            override fun onChanged(t: Boolean?) {
+                if( t == true){
+                    Toast.makeText(context,"Successfully inserted",Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        })
     }
 
-    private fun artistAdapterData(t: BaseModel){
+    private fun artistAdapterData(t: List<Artist_list>){
         val adapter = ArtistAdapter(t,
             object : onClickArtistListener {
                 override fun onClickedArtist(artist: Artist) {

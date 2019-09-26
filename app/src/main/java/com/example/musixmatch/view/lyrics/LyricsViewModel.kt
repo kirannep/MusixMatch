@@ -22,11 +22,11 @@ class LyricsViewModel @Inject constructor(application: Application, val clientIn
     val compositeDisposable = CompositeDisposable()
     private val lyrics:MutableLiveData<BaseModelLyrics> = MutableLiveData()
     private val showProgressBar:MutableLiveData<Boolean> = MutableLiveData()
+    var lyricsRepository:LyricsRepository = LyricsRepository(application,clientInterface)
 
     fun getLyricsFromRetrofit(id:Int){
         showProgressBar.value = true
-        val call: Observable<BaseModelLyrics> = clientInterface.getLyricsOfTrack(id,Constants.API_KEY)
-        call
+         lyricsRepository.trackFromRetrofit(id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(lyricsObserver)

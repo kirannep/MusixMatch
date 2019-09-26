@@ -21,12 +21,11 @@ class TrackViewModel @Inject constructor(application: Application, val clientInt
     val compositeDisposable = CompositeDisposable()
     private val track: MutableLiveData<BaseModelTrack>? = MutableLiveData()
     var showProgressBar:MutableLiveData<Boolean> = MutableLiveData()
+    var trackRepository:TrackRepository= TrackRepository(application,clientInterface)
 
     fun getTrackFromRetrofit(artistName:String) {
         showProgressBar.value = true
-        val call: Observable<BaseModelTrack> = clientInterface.getTrackOfArtist(artistName,Constants.API_KEY)
-        Log.d("call",call.toString())
-        call
+         trackRepository.trackFromRetrofit(artistName)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(trackObserver)

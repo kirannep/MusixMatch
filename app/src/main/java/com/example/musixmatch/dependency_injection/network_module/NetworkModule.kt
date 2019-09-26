@@ -3,6 +3,7 @@ package com.example.musixmatch.dependency_injection.network_module
 import android.app.Application
 import com.example.musixmatch.common.Constants
 import com.example.musixmatch.network.GetArtistRequest
+import com.example.musixmatch.view.artist.ArtistRepository
 import com.example.musixmatch.view.artist.FragmentArtistModelFactory
 import com.example.musixmatch.view.lyrics.FragmentLyricsModelFactory
 import com.example.musixmatch.view.track.FragmentTrackModelFactory
@@ -68,4 +69,6 @@ class NetworkModule(private val application: Application) {
     fun provideLyricsViewModelFactory(clientInterface:GetArtistRequest,application: Application): FragmentLyricsModelFactory {
         return FragmentLyricsModelFactory(clientInterface, application)
     }
+
+
 }
